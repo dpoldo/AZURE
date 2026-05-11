@@ -1,0 +1,52 @@
+agent:
+  name: coderabbit-reviewer
+  enabled: true
+  mode: reviewer
+
+trigger:
+  - type: pull_request
+    branches: ["main"]
+  - type: push
+    branches: ["main"]
+
+project:
+  root: .
+  language: csharp
+  build:
+    command: dotnet build "Azure.csproj" --configuration Release
+    working_directory: .
+    continue_on_failure: false
+  test:
+    command: dotnet test
+    working_directory: .
+    continue_on_failure: true
+
+exclude:
+  - "local.settings.json"
+  - "**/bin/**"
+  - "**/obj/**"
+  - ".git/**"
+
+analysis:
+  tools:
+    - name: roslyn
+      enabled: true
+    - name: secret-detection
+      enabled: true
+    - name: security-scan
+      enabled: true
+  checks:
+    - azure-functions-best-practices
+    - suspicious-secrets
+    - unused-usings
+    - nullable-annotations
+  max_diff_files: 30
+  max_file_size_kb: 5000
+
+reporting:
+  comment_on_pr: true
+  summary: true
+  annotations: true
+
+permissions:
+  read_only: true
