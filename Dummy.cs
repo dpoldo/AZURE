@@ -5,7 +5,8 @@
 /// </summary>
 public class Dummy
 {
-	public Dummy()
+    public Int32 MyProperty { get; set; }
+    public Dummy()
 	{
 		//
 		// TODO: Add constructor logic here
